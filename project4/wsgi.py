@@ -17,4 +17,4 @@ application = get_wsgi_application()
 
 from whitenoise import WhiteNoise
 
-application = DjangoWhiteNoise(application)
+application = WhiteNoise(application)
