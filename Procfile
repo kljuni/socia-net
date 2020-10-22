@@ -1,1 +1,1 @@
-web: gunicorn network.wsgi --log-file -
+web: gunicorn socia-net.wsgi --log-file -
