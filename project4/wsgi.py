@@ -15,6 +15,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project4.settings')
 
 application = get_wsgi_application()
 
-from whitenoise import WhiteNoise
+# from whitenoise import WhiteNoise
 
-application = WhiteNoise(application)
+# application = WhiteNoise(application)

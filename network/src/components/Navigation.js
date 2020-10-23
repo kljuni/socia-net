@@ -15,11 +15,11 @@ function Navigation({ user, loaded }) {
     }
 
     return(
-        <Navbar bg="light" expand="lg">
-            <Navbar.Brand href="#home">Network</Navbar.Brand>
+        <Navbar className="border-bottom" fixed="top" bg="light" expand="lg">
+            {/* <Navbar.Brand href="#home">Network</Navbar.Brand> */}
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="mr-auto">
+                <Nav className='mx-auto h4'>
                 {/* If user logged in display button username */}
                 {user.email ? <Nav.Link href="#"><b>{user.username}</b></Nav.Link> : null}
                 <Nav.Link href="/">All Posts</Nav.Link>

@@ -33,7 +33,7 @@ def post_list(request):
     List all posts, or create a new post.
     """
     if request.method == 'GET':
-        posts = Post.objects.all()
+        posts = Post.objects.all().order_by('-timestamp')
         serializer = PostSerializer(posts, many=True)
         return JsonResponse(serializer.data, safe=False)
     elif request.method == 'POST':
