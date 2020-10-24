@@ -5,7 +5,7 @@ from .models import User, Post, Like, Follower
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username',)
+        fields = ('id','username')
 
 class UserSerializerWithToken(serializers.ModelSerializer):
     token = serializers.SerializerMethodField()
@@ -29,7 +29,7 @@ class UserSerializerWithToken(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('token', 'username', 'password', 'email')
+        fields = ('id', 'token', 'username', 'password', 'email')
 
 
 # class UserSerializer(serializers.ModelSerializer):
@@ -45,10 +45,14 @@ class LikeSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField('get_like_count')
     post_author = serializers.SerializerMethodField('get_author')
+    user_id = serializers.SerializerMethodField('get_user_id')
+
+    def get_user_id(self, obj):
+        return obj.author.id
 
     class Meta:
-        model = Post 
-        fields = ['id', 'author', 'body', 'timestamp', 'like_count', 'post_author']
+        model = Post
+        fields = ['id', 'author' , 'user_id', 'body', 'timestamp', 'like_count', 'post_author']
 
     def get_like_count(self, tweet_post):
         return Like.objects.filter(post=tweet_post).count()

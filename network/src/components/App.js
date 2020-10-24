@@ -9,6 +9,7 @@ import NewAlert from "./NewAlert";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
+import Profile from './Profile';
 
 class App extends Component {
     constructor(props){
@@ -20,11 +21,12 @@ class App extends Component {
             loaded: false,
             user_loaded: false,
             placeholder: "Loading",
-            content: "All Posts",
+            content: '',
             msg: '',
-            displayed_form: 'login',
             logged_in: localStorage.getItem('token') ? true : false,
-            username: ''
+            displayed_form: '',
+            username: '',
+            user_id: ''
         }
     };
 
@@ -38,17 +40,18 @@ class App extends Component {
     
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state.post)
+        console.log(this.state.user_id)
         this.setState({post: ''})
         console.log("submited");
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                author: this.state.user.id,
-                body: this.state.post
+                author: this.state.user_id,
+                body: this.state.post,
+                msg: "sth works"
             })
-        };
+        }; 
         fetch('api/posts', requestOptions)
             .then(response => response.json())
             .then(data => this.setState({msg: 'Your socia! was sent.'}));
@@ -63,12 +66,25 @@ class App extends Component {
             })
               .then(res => res.json())
               .then(json => {
-                this.setState({ username: json.username });
+                this.setState({ 
+                    username: json.username,
+                    user_id: json.id});
               });
+              console.log(this.state.user_id)
+        }
+        else {
+            this.setState({
+                displayed_form: 'login',
+            });
         }
     }
     
     fetchAllPost = () => {
+        window.scrollTo(0, 0)
+        this.setState({
+            displayed_form: '',
+            content: 'All Posts'
+        });
         fetch("api/posts")
         .then(response => {
             if (response.status > 400) {
@@ -79,14 +95,33 @@ class App extends Component {
             return response.json();
         })
         .then(data => {
+            console.log(data)
             this.setState(() => {
                 return {
-                    data:data
+                    data:data,
+                    loaded: true
                 };
             });
         });
     }
     
+    showProfile = (id) => {
+        window.scrollTo(0, 0)
+        this.setState({
+            displayed_form: '',
+            content: 'Profile'
+        });
+        console.log(id)
+        fetch("api/user/" + id)
+        .then(response => response.json())
+        .then(json => {
+            console.log(json.posts)
+            this.setState({
+                data: json.posts
+            })
+        })
+    }
+
     handle_login = (e, data) => {
         e.preventDefault();
         fetch('http://localhost:8000/token-auth/', {
@@ -102,7 +137,8 @@ class App extends Component {
             this.setState({
               logged_in: true,
               displayed_form: '',
-              username: json.user.username
+              username: json.user.username,
+              user_id: json.user.id
             });
           });
     };
@@ -122,19 +158,29 @@ class App extends Component {
             this.setState({
               logged_in: true,
               displayed_form: '',
-              username: json.username
+              username: json.username,
+              user_id: json.id
             });
           });
     };
 
     handle_logout = () => {
         localStorage.removeItem('token');
-        this.setState({ logged_in: false, username: '' });
+        this.setState({
+            displayed_form: 'login',
+            logged_in: false, 
+            username: '',
+            content: '',
+            user_id: ''
+        });
       };
     
     display_form = form => {
+        window.scrollTo(0, 0)
         this.setState({
-            displayed_form: form
+            displayed_form: form,
+            content: '',
+            data : []
         });
     };
 
@@ -155,21 +201,20 @@ class App extends Component {
                     logged_in={this.state.logged_in}
                     display_form={this.display_form}
                     handle_logout={this.handle_logout}
-                    user={this.state.user} 
+                    username={this.state.username} 
+                    user_id={this.state.user_id} 
                     loaded={this.state.user_loaded}
-                    fetchAllPost={this.fetchAllPost} />
+                    fetchAllPost={this.fetchAllPost}
+                    showProfile={this.showProfile} />
                 </Container>
                 {form}
-                <h3>
-                {this.state.logged_in
-                    ? `Hello, ${this.state.username}`
-                    : 'Please Log In'}
-                </h3>
                 <div className="container p-0 bg-white whole-height">                
                     <div className="border-left border-right">
                         <h1 className="px-3">{this.state.content}</h1>
+                        
+                        {(this.state.logged_in && this.state.content === 'Profile') ? <Profile data={this.state.data} /> : null}
                         {/* If user logged in display post form */}
-                        {this.state.logged_in ? <Post handleSubmit={this.handleSubmit} handleChange={this.handleChange} post={this.state.post}/> : null}
+                        {(this.state.logged_in && ['All Posts','Following',''].includes(this.state.content)) ? <Post handleSubmit={this.handleSubmit} handleChange={this.handleChange} post={this.state.post}/> : null}
                         <ReactCSSTransitionGroup
                             transitionName="fade"
                             transitionEnterTimeout={500}
@@ -178,7 +223,7 @@ class App extends Component {
                         </ReactCSSTransitionGroup>  
                     </div>
                     <div className="border-left border-right">
-                        <PostsList data={this.state.data}/>
+                        {['All Posts','Following','Profile'].includes(this.state.content) ? <PostsList data={this.state.data} showProfile={this.showProfile}/> : null}
                     </div>
                 </div>
                 <div className="text-center">

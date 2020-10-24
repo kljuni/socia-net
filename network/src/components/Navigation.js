@@ -3,7 +3,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import ContentLoader, { Facebook } from "react-content-loader";
 
-function Navigation({ user, fetchAllPost, display_form, handle_logout, logged_in }) {
+function Navigation({ username, user_id, fetchAllPost, display_form, handle_logout, logged_in, showProfile }) {
     
     // if (!loaded) {
     //     return (
@@ -21,14 +21,14 @@ function Navigation({ user, fetchAllPost, display_form, handle_logout, logged_in
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className='mx-auto h4'>
                     {/* If user logged in display button username */}
-                    {user.email ? <Nav.Link href="#"><b>{user.username}</b></Nav.Link> : null}
+                    {logged_in && username ? <Nav.Link onClick={() => showProfile(user_id)}><b>{username.charAt(0).toUpperCase() + username.slice(1)}</b></Nav.Link> : null}
                     <Nav.Link onClick={() => fetchAllPost()}>All Posts</Nav.Link>
                     {/* If user logged in display button following */}
-                    {user.email ? <Nav.Link href="#">Following</Nav.Link> : null}
+                    {logged_in ? <Nav.Link href="#">Following</Nav.Link> : null}
 
                     {/* If user NOT logged in display login and register button */}
-                    {user.email ? null : <Nav.Link onClick={() => display_form('login')} >Log in</Nav.Link>}
-                    {user.email ? null : <Nav.Link onClick={() => display_form('register')} >Register</Nav.Link>}
+                    {logged_in ? null : <Nav.Link onClick={() => display_form('login')} >Log in</Nav.Link>}
+                    {logged_in ? null : <Nav.Link onClick={() => display_form('register')} >Register</Nav.Link>}
 
                     {/* If user logged in display button log out */}
                     {logged_in ? <Nav.Link onClick={handle_logout} >Logout</Nav.Link> : null}

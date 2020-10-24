@@ -41,17 +41,20 @@ class UserList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
-def view_user(request):
+def view_user(request, id):
     """
-    API for providing user data for React.
+    API for providing individual user data for React.
     """
     if request.method == 'GET':
-        if request.user.is_authenticated:
-            user = User.objects.get(pk=request.user.id)
-            serializer = UserSerializer(user)
-            return JsonResponse(serializer.data, safe=False)
-        # If user not logged in return empty JSON
-        return JsonResponse({}, safe=False)
+        user = User.objects.get(pk=id)
+        if user:
+            user_serializer = UserSerializer(user)
+            posts = Post.objects.filter(author=user).order_by('-timestamp')
+            print(posts)
+            posts_serializer = PostSerializer(posts, many=True)
+            return JsonResponse({'user':user_serializer.data,'posts':posts_serializer.data}, safe=False)
+        # If user does not exist return empty JSON
+        return JsonResponse(serializer.errors, status=400)
 
 @csrf_exempt
 def post_list(request):
@@ -64,6 +67,9 @@ def post_list(request):
         return JsonResponse(serializer.data, safe=False)
     elif request.method == 'POST':
         data = JSONParser().parse(request)
+        print(data)
+        # print(request.data)
+        # data.author = request.user.id
         serializer = PostSerializer(data=data)
         if serializer.is_valid():
             serializer.save()

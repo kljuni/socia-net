@@ -17,7 +17,7 @@ function Post({ handleSubmit, handleChange, post }) {
             <Col className="px-0" xs={10} md={11}>
                 <Form className="border-0" onSubmit={handleSubmit}>
                     <Form.Group controlId="exampleForm.ControlTextarea1">
-                        <Form.Control value={post} className="border-0 input-font" onChange={(e) => handleChange(e)} as="textarea" rows={isMobile ? 8 : 5} />
+                        <Form.Control value={post} className="form-control-post border-0 input-font" onChange={(e) => handleChange(e)} as="textarea" rows={isMobile ? 8 : 5} />
                     </Form.Group>
                     <Button className="rounded-pill ml-auto mr-1 my-4 d-flex align-items-center" variant="primary" type="submit" disabled={(post.length === 0)}>
                         Socia! <img className="ml-1" width="25px" src="/static/images/wink.svg"/>
