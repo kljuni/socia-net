@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 import Button from "react-bootstrap/Button";
+import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Navigation from "./Navigation";
-import Post from "./Post";
+import WritePost from "./WritePost";
 import PostsList from "./PostsList";
 import NewAlert from "./NewAlert";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -26,9 +27,16 @@ class App extends Component {
             logged_in: localStorage.getItem('token') ? true : false,
             displayed_form: '',
             username: '',
-            user_id: ''
+            user_id: '',
+            user_view: {},
+            user_loaded: false,
+            num_pages: 0,
+            cur_page: 1,
+            expanded: false
         }
     };
+
+    
 
     handleChange = (e) => {
         this.setState({post: e.target.value})
@@ -48,13 +56,32 @@ class App extends Component {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 author: this.state.user_id,
-                body: this.state.post,
-                msg: "sth works"
+                body: this.state.post
             })
         }; 
-        fetch('api/posts', requestOptions)
+        fetch('api/posts/0', requestOptions)
+            .then(this.handleErrors)
             .then(response => response.json())
-            .then(data => this.setState({msg: 'Your socia! was sent.'}));
+            .then(data => {
+                this.setState({msg: 'Your socia! was sent.'});
+                this.fetchAllPost(1);
+            })
+
+    }
+
+    handleScroll = () => {
+        this.setState({expanded: false})
+    }
+
+    handleDisplayMenu = () => {
+        this.setState({expanded: !this.state.expanded})
+    }
+
+    handleErrors = (response) => {
+        if (!response.ok) {
+            throw Error(response.statusText + " - " + response.url);
+        }
+        return response;
     }
 
     componentDidMount() {
@@ -64,28 +91,40 @@ class App extends Component {
                 Authorization: `JWT ${localStorage.getItem('token')}`
               }
             })
-              .then(res => res.json())
-              .then(json => {
+            .then(this.handleErrors)
+            .then(res => res.json())
+            .then(json => {
                 this.setState({ 
                     username: json.username,
                     user_id: json.id});
-              });
-              console.log(this.state.user_id)
+            })
+            .catch(err => {
+                this.setState({ 
+                    username: '',
+                    user_id: '',
+                    logged_in: false
+                });                  
+            });
         }
         else {
             this.setState({
                 displayed_form: 'login',
             });
         }
+        document.addEventListener('scroll', this.handleScroll)
     }
     
-    fetchAllPost = () => {
+    fetchAllPost = (page) => {
         window.scrollTo(0, 0)
         this.setState({
             displayed_form: '',
-            content: 'All Posts'
+            content: 'All Posts',
+            user_view: {},
+            user_loaded: false,
+            expanded: false,
+            cur_page: page
         });
-        fetch("api/posts")
+        fetch(`api/posts/${page}`)
         .then(response => {
             if (response.status > 400) {
                 return this.setState(() => {
@@ -98,7 +137,8 @@ class App extends Component {
             console.log(data)
             this.setState(() => {
                 return {
-                    data:data,
+                    data:data.data,
+                    num_pages: data.num_pages,
                     loaded: true
                 };
             });
@@ -109,15 +149,18 @@ class App extends Component {
         window.scrollTo(0, 0)
         this.setState({
             displayed_form: '',
-            content: 'Profile'
+            content: 'Profile',
+            expanded: false,
+            loaded: false
         });
-        console.log(id)
         fetch("api/user/" + id)
         .then(response => response.json())
         .then(json => {
-            console.log(json.posts)
             this.setState({
-                data: json.posts
+                data: json.posts,
+                user_view: json,
+                user_loaded: true,
+                loaded: true
             })
         })
     }
@@ -171,7 +214,8 @@ class App extends Component {
             logged_in: false, 
             username: '',
             content: '',
-            user_id: ''
+            user_id: '',
+            expanded: false
         });
       };
     
@@ -180,7 +224,8 @@ class App extends Component {
         this.setState({
             displayed_form: form,
             content: '',
-            data : []
+            data : [],
+            expanded: false
         });
     };
 
@@ -205,16 +250,16 @@ class App extends Component {
                     user_id={this.state.user_id} 
                     loaded={this.state.user_loaded}
                     fetchAllPost={this.fetchAllPost}
-                    showProfile={this.showProfile} />
+                    showProfile={this.showProfile}
+                    expanded={this.state.expanded}
+                    handleDisplayMenu={this.handleDisplayMenu} />
                 </Container>
                 {form}
                 <div className="container p-0 bg-white whole-height">                
-                    <div className="border-left border-right">
-                        <h1 className="px-3">{this.state.content}</h1>
-                        
-                        {(this.state.logged_in && this.state.content === 'Profile') ? <Profile data={this.state.data} /> : null}
+                    <div className="border-left border-right">                        
+                        {this.state.content === 'Profile' && this.state.user_loaded === true ? <Profile user_loaded={this.state.user_loaded} data={this.state.data} user_id={this.state.user_id} user_view={this.state.user_view} /> : null}
                         {/* If user logged in display post form */}
-                        {(this.state.logged_in && ['All Posts','Following',''].includes(this.state.content)) ? <Post handleSubmit={this.handleSubmit} handleChange={this.handleChange} post={this.state.post}/> : null}
+                        {(this.state.logged_in && ['All Posts','Following',''].includes(this.state.content)) ? <WritePost handleSubmit={this.handleSubmit} handleChange={this.handleChange} post={this.state.post}/> : null}
                         <ReactCSSTransitionGroup
                             transitionName="fade"
                             transitionEnterTimeout={500}
@@ -222,12 +267,23 @@ class App extends Component {
                             {this.state.msg ? <NewAlert className="position-absolute" closeAlert={this.closeAlert} msg={this.state.msg}></NewAlert> : null}
                         </ReactCSSTransitionGroup>  
                     </div>
-                    <div className="border-left border-right">
-                        {['All Posts','Following','Profile'].includes(this.state.content) ? <PostsList data={this.state.data} showProfile={this.showProfile}/> : null}
+                    <div className="border-left border-right h-100">
+                        {['All Posts','Following','Profile'].includes(this.state.content) ? <PostsList 
+                        cur_page={this.state.cur_page} 
+                        num_pages={this.state.num_pages} 
+                        fetchAllPost={this.fetchAllPost} 
+                        data={this.state.data} 
+                        showProfile={this.showProfile}
+                        loaded={this.state.loaded}
+                        content={this.state.content}
+                        user_id={this.state.user_id}/> : 
+                        <div className="row h-100">
+                            <div className="text-center mt-auto mx-auto">
+                                SVG's thanks to <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>         
+                            </div>
+                        </div>
+                        }
                     </div>
-                </div>
-                <div className="text-center">
-                    SVG's thanks to <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>         
                 </div>
             </div>
         )

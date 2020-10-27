@@ -54,6 +54,11 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'author' , 'user_id', 'body', 'timestamp', 'like_count', 'post_author']
 
+    def update(self, instance, validated_data):
+        instance.body = validated_data.get('body', instance.body)
+        instance.save()
+        return instance
+
     def get_like_count(self, tweet_post):
         return Like.objects.filter(post=tweet_post).count()
 

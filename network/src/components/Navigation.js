@@ -3,7 +3,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import ContentLoader, { Facebook } from "react-content-loader";
 
-function Navigation({ username, user_id, fetchAllPost, display_form, handle_logout, logged_in, showProfile }) {
+function Navigation({ handleDisplayMenu, expanded, username, user_id, fetchAllPost, display_form, handle_logout, logged_in, showProfile }) {
     
     // if (!loaded) {
     //     return (
@@ -15,23 +15,23 @@ function Navigation({ username, user_id, fetchAllPost, display_form, handle_logo
     // }
 
     return(
-        <Navbar className="border-bottom" fixed="top" bg="light" expand="lg">
+        <Navbar collapseOnSelect className="border-bottom" fixed="top" expanded={expanded} bg="light" expand="lg">
             {/* <Navbar.Brand href="#home">Network</Navbar.Brand> */}
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Toggle onClick={() => handleDisplayMenu()} aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className='mx-auto h4'>
                     {/* If user logged in display button username */}
-                    {logged_in && username ? <Nav.Link onClick={() => showProfile(user_id)}><b>{username.charAt(0).toUpperCase() + username.slice(1)}</b></Nav.Link> : null}
-                    <Nav.Link onClick={() => fetchAllPost()}>All Posts</Nav.Link>
+                    {logged_in && username ? <Nav.Link href="#" onSelect={() => showProfile(user_id)}><b>{username.charAt(0).toUpperCase() + username.slice(1)}</b></Nav.Link> : null}
+                    <Nav.Link href="#" onSelect={() => fetchAllPost(1)}>All Posts</Nav.Link>
                     {/* If user logged in display button following */}
                     {logged_in ? <Nav.Link href="#">Following</Nav.Link> : null}
 
                     {/* If user NOT logged in display login and register button */}
-                    {logged_in ? null : <Nav.Link onClick={() => display_form('login')} >Log in</Nav.Link>}
-                    {logged_in ? null : <Nav.Link onClick={() => display_form('register')} >Register</Nav.Link>}
+                    {logged_in ? null : <Nav.Link href="#" onSelect={() => display_form('login')} >Log in</Nav.Link>}
+                    {logged_in ? null : <Nav.Link href="#" onSelect={() => display_form('register')} >Register</Nav.Link>}
 
                     {/* If user logged in display button log out */}
-                    {logged_in ? <Nav.Link onClick={handle_logout} >Logout</Nav.Link> : null}
+                    {logged_in ? <Nav.Link href="#" onSelect={handle_logout} >Logout</Nav.Link> : null}
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

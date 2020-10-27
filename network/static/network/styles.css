@@ -2,11 +2,45 @@ body {
     padding-top: 60px;
 }
 
+.profile-banner {
+    height: 8em;
+    background-color: silver;
+}
+
+.neg-margin {
+    margin-top: -2.5rem;
+}
+
+.post-divider {
+    height: 10px;
+    background-color: rgb(230, 236, 240);
+}
+
 .box-shadow {
     -webkit-box-shadow: 10px 9px 10px -9px rgba(0,0,0,0.75);
     -moz-box-shadow: 10px 9px 10px -9px rgba(0,0,0,0.75);
     box-shadow: 10px 9px 10px -9px rgba(0,0,0,0.75);
 }
+
+.btn-pagination {
+    color:  black;
+    background-color: white;
+    border-color: white;
+}
+
+.btn-pagination:hover {
+    color:  black;
+    background-color: white;
+    border-color: white;
+}
+
+.btn-pagination:focus {
+    color:  black;
+    background-color: white;
+    border-color: white;
+    box-shadow: 0 0 0 0;
+}
+
 
 .fade-enter {
     opacity: 0.01;
