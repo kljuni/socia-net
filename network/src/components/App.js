@@ -11,6 +11,13 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import Profile from './Profile';
+import { Switch, Route, Link } from "react-router-dom";
+import Login from "./login"; 
+import Signup from "./signup";
+import Hello from "./hello";
+import axiosInstance from "./axiosApi"
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 class App extends Component {
     constructor(props){
@@ -24,7 +31,7 @@ class App extends Component {
             placeholder: "Loading",
             content: '',
             msg: '',
-            logged_in: localStorage.getItem('token') ? true : false,
+            logged_in: localStorage.getItem('access_token') ? true : false,
             displayed_form: '',
             username: '',
             user_id: '',
@@ -34,9 +41,23 @@ class App extends Component {
             cur_page: 1,
             expanded: false
         }
+        this.handleLogout = this.handleLogout.bind(this);
     };
 
-    
+    async handleLogout() { 
+        try { 
+            console.log(localStorage.getItem("refresh_token"))
+            const response = await axiosInstance.post('/blacklist/', { refresh_token: localStorage.getItem("refresh_token")}); 
+            console.log("sucess2")
+            localStorage.removeItem('access_token'); 
+            localStorage.removeItem('refresh_token'); 
+            axiosInstance.defaults.headers['Authorization'] = null; 
+            return response; 
+        } 
+        catch (e) { 
+            console.log(e); 
+        } 
+    };
 
     handleChange = (e) => {
         this.setState({post: e.target.value})
@@ -83,6 +104,20 @@ class App extends Component {
         }
         return response;
     }
+
+    // componentDidMount() {
+    //     if (this.state.logged_in) {
+    //       fetch('http://localhost:8000/current_user/', {
+    //         headers: {
+    //           Authorization: `JWT ${localStorage.getItem('token')}`
+    //         }
+    //       })
+    //         .then(res => res.json())
+    //         .then(json => {
+    //           this.setState({ username: json.username });
+    //         });
+    //     }
+    // }
 
     componentDidMount() {
         if (this.state.logged_in) {
@@ -167,7 +202,7 @@ class App extends Component {
 
     handle_login = (e, data) => {
         e.preventDefault();
-        fetch('http://localhost:8000/token-auth/', {
+        fetch('http://localhost:8000/token/obtain/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -177,6 +212,7 @@ class App extends Component {
           .then(res => res.json())
           .then(json => {
             localStorage.setItem('token', json.token);
+            console.log(json)
             this.setState({
               logged_in: true,
               displayed_form: '',
@@ -188,7 +224,7 @@ class App extends Component {
 
     handle_signup = (e, data) => {
         e.preventDefault();
-        fetch('http://localhost:8000/users/', {
+        fetch('http://localhost:8000/user/create/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -241,50 +277,72 @@ class App extends Component {
         default:
             form = null;}
         return (
-            <div>
-                <Container><Navigation 
-                    logged_in={this.state.logged_in}
-                    display_form={this.display_form}
-                    handle_logout={this.handle_logout}
-                    username={this.state.username} 
-                    user_id={this.state.user_id} 
-                    loaded={this.state.user_loaded}
-                    fetchAllPost={this.fetchAllPost}
-                    showProfile={this.showProfile}
-                    expanded={this.state.expanded}
-                    handleDisplayMenu={this.handleDisplayMenu} />
-                </Container>
-                {form}
-                <div className="container p-0 bg-white whole-height">                
-                    <div className="border-left border-right">                        
-                        {this.state.content === 'Profile' && this.state.user_loaded === true ? <Profile user_loaded={this.state.user_loaded} data={this.state.data} user_id={this.state.user_id} user_view={this.state.user_view} /> : null}
-                        {/* If user logged in display post form */}
-                        {(this.state.logged_in && ['All Posts','Following',''].includes(this.state.content)) ? <WritePost handleSubmit={this.handleSubmit} handleChange={this.handleChange} post={this.state.post}/> : null}
-                        <ReactCSSTransitionGroup
-                            transitionName="fade"
-                            transitionEnterTimeout={500}
-                            transitionLeaveTimeout={300}>
-                            {this.state.msg ? <NewAlert className="position-absolute" closeAlert={this.closeAlert} msg={this.state.msg}></NewAlert> : null}
-                        </ReactCSSTransitionGroup>  
-                    </div>
-                    <div className="border-left border-right h-100">
-                        {['All Posts','Following','Profile'].includes(this.state.content) ? <PostsList 
-                        cur_page={this.state.cur_page} 
-                        num_pages={this.state.num_pages} 
-                        fetchAllPost={this.fetchAllPost} 
-                        data={this.state.data} 
-                        showProfile={this.showProfile}
-                        loaded={this.state.loaded}
-                        content={this.state.content}
-                        user_id={this.state.user_id}/> : 
-                        <div className="row h-100">
-                            <div className="text-center mt-auto mx-auto">
-                                SVG's thanks to <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>         
-                            </div>
-                        </div>
-                        }
-                    </div>
-                </div>
+            <div className="site"> 
+            <nav> 
+                <Link className={"nav-link"} to={"/"}>Home</Link> 
+                <Link className={"nav-link"} to={"/login/"}>Login</Link> 
+                <Link className={"nav-link"} to={"/signup/"}>Signup</Link> 
+                <Link className={"nav-link"} to={"/hello/"}>Hello</Link>
+                <button onClick={this.handleLogout}>Logout</button>
+            </nav>
+                    <main> 
+                        <h1>Ahhh after 10,000 years I'm free. Time to conquer the Earth!</h1>
+                            <Switch> 
+                                <Route path={"/login/"} component={Login}/> 
+                                <Route exact path={"/signup/"} component={Signup}/> 
+                                <Route exact path={"/hello/"} component={Hello}/>
+                                <Route path={"/"} render={() => <div>
+                                    <div>
+                                        <Container><Navigation 
+                                            logged_in={this.state.logged_in}
+                                            display_form={this.display_form}
+                                            handle_logout={this.handle_logout}
+                                            username={this.state.username} 
+                                            user_id={this.state.user_id} 
+                                            loaded={this.state.user_loaded}
+                                            fetchAllPost={this.fetchAllPost}
+                                            showProfile={this.showProfile}
+                                            expanded={this.state.expanded}
+                                            handleDisplayMenu={this.handleDisplayMenu} />
+                                        </Container>
+
+                                        
+
+                                        {form}
+                                        <div className="container p-0 bg-white whole-height">                
+                                            <div className="border-left border-right">                        
+                                                {this.state.content === 'Profile' && this.state.user_loaded === true ? <Profile user_loaded={this.state.user_loaded} data={this.state.data} user_id={this.state.user_id} user_view={this.state.user_view} /> : null}
+                                                {/* If user logged in display post form */}
+                                                {(this.state.logged_in && ['All Posts','Following',''].includes(this.state.content)) ? <WritePost handleSubmit={this.handleSubmit} handleChange={this.handleChange} post={this.state.post}/> : null}
+                                                <ReactCSSTransitionGroup
+                                                    transitionName="fade"
+                                                    transitionEnterTimeout={500}
+                                                    transitionLeaveTimeout={300}>
+                                                    {this.state.msg ? <NewAlert className="position-absolute" closeAlert={this.closeAlert} msg={this.state.msg}></NewAlert> : null}
+                                                </ReactCSSTransitionGroup>  
+                                            </div>
+                                            <div className="border-left border-right h-100">
+                                                {['All Posts','Following','Profile'].includes(this.state.content) ? <PostsList 
+                                                cur_page={this.state.cur_page} 
+                                                num_pages={this.state.num_pages} 
+                                                fetchAllPost={this.fetchAllPost} 
+                                                data={this.state.data} 
+                                                showProfile={this.showProfile}
+                                                loaded={this.state.loaded}
+                                                content={this.state.content}
+                                                user_id={this.state.user_id}/> : 
+                                                <div className="row h-100">
+                                                    <div className="text-center mt-auto mx-auto">
+                                                        SVG's thanks to <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>         
+                                                    </div>
+                                                </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>}/>
+                            </Switch>
+                    </main> 
             </div>
         )
     }
@@ -292,5 +350,8 @@ class App extends Component {
 
 export default App;
 
-const container = document.getElementById("root");
-render(<App />, container);
+// const container = document.getElementById("root");
+// render(( 
+//         <BrowserRouter>
+//             <App />
+//         </BrowserRouter>), container);

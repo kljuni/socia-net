@@ -14,6 +14,7 @@ class Post extends Component {
         this.state = {
             edit: false,
             tweet: this.props.post.body,
+            like: this.props.post.isLiked
         }
     };
 
@@ -46,13 +47,41 @@ class Post extends Component {
             .catch(err => console.log(err));
     }
 
+    likePost = (id) => {
+        // If user is not signed in, invite to log in
+        if (!this.props.user_id) {
+            console.log("please sign in")
+            return null;
+        }        
+        const requestOptions = {
+            method: 'POST',
+            headers: { Authorization: `JWT ${localStorage.getItem('token')}` },
+            body: JSON.stringify({ 
+                liker: this.props.user_id,
+                post: id
+            })
+        }; 
+        fetch(`api/like/${id}`, requestOptions)
+            .then(response => {
+                console.log(response.ok + " response")
+                if (!response.ok) throw Error(response.statusText + " - " + response.url);
+                return response.json()
+            })
+            .then(data => {
+                console.log(data + " data")
+                if (data.action === 'like') this.setState({like:true})
+                else if (data.action === 'deleted') this.setState({like:false})
+            })
+            .catch(err => console.log(err));
+    }
+
     handleChange = (e) => {
         this.setState({tweet: e.target.value});
     }
 
     render() {
         const { post, showProfile, y, user_id } = this.props;
-        const { edit, tweet } = this.state;
+        const { edit, tweet, like } = this.state;
         return(
             <div className="p-0 m-0">
                 <Card key={post.id} className={y === 0 ? "mx-auto mt-2 mb-1 border-0 px-2" : "mx-auto my-1 border-0 px-2"}>
@@ -83,9 +112,16 @@ class Post extends Component {
                                         <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                                     </svg> : null}
                                 </div>
-                                <svg key={post.id + 1} width="1.5em" height="1.5em" viewBox="0 0 16 16" className="bi bi-heart my-auto pb-1" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                {console.log(like)}
+                                {!like ? 
+                                <svg onClick={() => this.likePost(post.id)} key={post.id + 1} width="2.6em" height="2.6em" viewBox="0 0 16 16" className="like-heart bi bi-heart my-auto p-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path fillRule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                                </svg> 
+                                :
+                                <svg onClick={() => this.likePost(post.id)} width="2.6em" height="2.6em" viewBox="0 0 16 16" className="like-heart bi bi-heart my-auto p-2" fill="rgb(224, 36, 94)" xmlns="http://www.w3.org/2000/svg">
+                                    <path fillRule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
                                 </svg>
+                                }
                             </Col>
                         </Row>
                         <Row key={post.id + 1} className="mt-2 mx-auto">

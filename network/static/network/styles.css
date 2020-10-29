@@ -22,6 +22,16 @@ body {
     box-shadow: 10px 9px 10px -9px rgba(0,0,0,0.75);
 }
 
+.like-heart {
+    padding-bottom: 0.5rem !important;
+}
+
+.like-heart:hover {
+    border: red;
+    border-radius: 40px;
+    background-color: rgb(224, 36, 94, 0.4);
+}
+
 .btn-pagination {
     color:  black;
     background-color: white;
