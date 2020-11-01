@@ -33,3 +33,9 @@ class Follower(models.Model):
 
     def __str__(self):
         return f"{self.follower} follows {self.followed}"
+
+class Comment(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='commented_posts')
+    body = models.CharField(max_length=140)
+    timestamp = models.DateTimeField(auto_now_add=True)

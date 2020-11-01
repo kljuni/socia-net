@@ -1,5 +1,9 @@
 body {
-    padding-top: 60px;
+    padding-top: 38px;
+}
+
+.pointer {
+    cursor: pointer;
 }
 
 .profile-banner {
@@ -84,7 +88,7 @@ body {
 }
 
 .whole-height {
-    height: 100vh;
+    height: 100%;
 }
 
 .input-font {

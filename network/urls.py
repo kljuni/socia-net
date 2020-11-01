@@ -3,28 +3,32 @@ from django.conf.urls import url
 from rest_framework_simplejwt import views as jwt_views
 
 from . import views
-from .views import ObtainTokenPairWithColorView, CustomUserCreate, HelloWorldView, LogoutAndBlacklistRefreshTokenForUserView 
+from .views import ObtainTokenPairWithColorView, CustomUserCreate, LogoutAndBlacklistRefreshTokenForUserView, GetQuestionsAPIView, PostList, LikePost, EditPost, ViewUser, FollowUser, CommentPost
 
 urlpatterns = [
     path("", views.index, name="index"),
     path('current_user/', views.current_user),
     path('users/', views.UserList.as_view()),
 
-    path('api/hello/', HelloWorldView.as_view(), name='hello_world'),
+    path('api/hello/', GetQuestionsAPIView.as_view()),
 
     # API Routes
-    path('api/token/obtain/', ObtainTokenPairWithColorView.as_view(), name='token_create'), 
-    path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    # path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 
     path('api/user/create/', CustomUserCreate.as_view(), name="create_user"),
-    path('token/obtain/', ObtainTokenPairWithColorView.as_view(), name='token_create'),
-    path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    
+    path('api/token/obtain/', ObtainTokenPairWithColorView.as_view(), name='token_create'),
+    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 
-    path("api/posts/<int:page>", views.post_list, name="posts"),
-    path("api/edit/<int:id>", views.edit_post, name="edit"),
-    path("api/like/<int:id>", views.like_post, name="like"),
-    path("api/user/<int:id>", views.view_user, name="user"),
-    path("api/follow/<str:action>/<int:id>", views.follow_user, name="follow"),
+    path("api/posts/<int:page>/<str:follow>/", PostList.as_view(), name="posts"),
+    path("api/like/<int:id>/", LikePost.as_view(), name="like"),
+
+    path("api/comment/<int:id>/", CommentPost.as_view(), name="comment"),
+
+    path("api/edit/<int:id>/", EditPost.as_view(), name="edit"),
+    
+    path("api/user/<int:id>/", ViewUser.as_view(), name="user"),
+    path("api/follow/<str:action>/<int:id>/", FollowUser.as_view(), name="follow"),
     path('api/blacklist/', LogoutAndBlacklistRefreshTokenForUserView.as_view(), name='blacklist'),
     url(r'^.*/$', views.index)
 ]
