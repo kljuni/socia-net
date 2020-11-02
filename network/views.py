@@ -19,6 +19,9 @@ from .serializers import MyTokenObtainPairSerializer, CustomUserSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from PIL import Image
+from django.core.files.storage import FileSystemStorage
+import glob, os
 
 from .models import User
 from rest_framework import generics
@@ -176,6 +179,7 @@ class ViewUser(APIView):
     #             Follower.objects.get(follower = request.user, followed=user)
     #             user_follows = True
     #         except: 
+
     #             user_follows = False
     #         print(posts)
     #         posts_serializer = PostSerializer(posts, context={'request': request}, many=True)
@@ -188,6 +192,20 @@ class ViewUser(APIView):
     #             }, safe=False)
     #     # If user does not exist return empty JSON
     #     return JsonResponse(user_serializer.errors, status=400)
+
+class UserImage(APIView):
+    permission_classes = [IsAuthenticated,] 
+    def put(self, request, id):
+        try:
+            im = Image.open(request.FILES['image'])
+            request.user.image = request.FILES['image']
+            print("works 4")
+            request.user.save()
+            print(request.user.image.url)
+            return JsonResponse({'image': request.user.image.url}, status=200, safe=False)
+        except:
+            return HttpResponse(status=401)
+
 
 class FollowUser(APIView):
     """

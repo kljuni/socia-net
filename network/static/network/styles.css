@@ -2,12 +2,76 @@ body {
     padding-top: 38px;
 }
 
+.profile-pic {
+    height: 100px;
+    width: auto;
+}
+
+.avatar-parent {
+    position: relative; 
+    /* border: 1px solid red; 
+    width: 50px; 
+    height: 30px; 
+    line-height: 30px; 
+    text-align: center; */
+}
+
+.avatar-input {
+    opacity: 0.0; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    bottom: 0; 
+    right: 0; 
+    width: 100%; 
+    height:100%;
+    cursor: pointer;
+}
+
+.avatar-pic {
+    position: absolute;
+    bottom: -30px;
+    left: 20px;
+    height: 140px !important;
+    border: 5px solid white;
+    background-color: white;
+    width: 140px !important;
+    border-radius: 9999px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.avatar-div {
+    position: relative;
+}
+
+.avatar-icon {
+    position: absolute;
+    /* bottom: -10px;
+    left: 20px; */
+    height: 60px !important;
+    /* border: 5px solid white; */
+    background-color: white;
+    width: 60px !important;
+    border-radius: 9999px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 .pointer {
     cursor: pointer;
 }
 
+.reply-line {
+    width: 2px;
+    background-color: rgb(204, 214, 221);
+}
+
 .profile-banner {
-    height: 8em;
+    position: relative;
+    height: 10em;
     background-color: silver;
 }
 

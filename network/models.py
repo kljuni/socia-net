@@ -2,9 +2,15 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from datetime import date
 from django.utils import timezone
+from sorl.thumbnail import ImageField, get_thumbnail
+from PIL import Image
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
+
+from django_resized import ResizedImageField
 
 class User(AbstractUser):
-    pass
+    image = ResizedImageField(upload_to='profile_image', blank=True, default='default.jpg')
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')

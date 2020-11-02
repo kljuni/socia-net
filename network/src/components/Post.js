@@ -148,12 +148,53 @@ class Post extends Component {
     render() {
         const { post, showProfile, y, user_id, comments } = this.props;
         const { edit, tweet, like, commenting, showComments } = this.state;
-        const comments_section = comments.map(comm => {
+        const comments_section = comments.map((comm, y) => {
             return (
-                <div key={comm.id}>
-                    {comm.comment_author}
-                    {comm.body}
-                </div>
+                // <div key={comm.id}>
+                //     {comm.comment_author}
+                //     {comm.body}
+                // </div>
+            <div  className="p-0 m-0">
+            <Card key={comm.id} className={y === 0 ? "mx-auto mt-2 mb-1 border-0 px-2" : "mx-auto my-1 border-0 px-2"}>
+                <Card.Body key={comm.id} className="p-0">
+                    <Row key={comm.id} className="mx-auto">
+                        <Col key={comm.id} className="px-0" xs={2} md={1}>
+                            {/* <svg width={isMobile ? "2em" : "3em"} height={isMobile ? "2em" : "3em"} viewBox="0 0 16 16" className="bi bi-chat-quote" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fillRule="evenodd" d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+                                <path d="M7.468 7.667c0 .92-.776 1.666-1.734 1.666S4 8.587 4 7.667C4 6.747 4.776 6 5.734 6s1.734.746 1.734 1.667z"/>
+                                <path fillRule="evenodd" d="M6.157 6.936a.438.438 0 0 1-.56.293.413.413 0 0 1-.274-.527c.08-.23.23-.44.477-.546a.891.891 0 0 1 .698.014c.387.16.72.545.923.997.428.948.393 2.377-.942 3.706a.446.446 0 0 1-.612.01.405.405 0 0 1-.011-.59c1.093-1.087 1.058-2.158.77-2.794-.152-.336-.354-.514-.47-.563zm-.035-.012h-.001.001z"/>
+                                <path d="M11.803 7.667c0 .92-.776 1.666-1.734 1.666-.957 0-1.734-.746-1.734-1.666 0-.92.777-1.667 1.734-1.667.958 0 1.734.746 1.734 1.667z"/>
+                                <path fillRule="evenodd" d="M10.492 6.936a.438.438 0 0 1-.56.293.413.413 0 0 1-.274-.527c.08-.23.23-.44.477-.546a.891.891 0 0 1 .698.014c.387.16.72.545.924.997.428.948.392 2.377-.942 3.706a.446.446 0 0 1-.613.01.405.405 0 0 1-.011-.59c1.093-1.087 1.058-2.158.77-2.794-.152-.336-.354-.514-.469-.563zm-.034-.012h-.002.002z"/>
+                            </svg> */}
+                        </Col>
+                        <Col key={comm.id + 1} className="px-0 d-flex" xs={10} md={11}>
+                            <Card.Title 
+                                key={comm.id} 
+                                className="my-auto ml-2 pointer"
+                                onClick={() => showProfile(comm.author)}>
+                                    {comm.comment_author}
+                                <span className="text-secondary small"> · {moment(comm.timestamp).fromNow()}</span>
+                            </Card.Title>
+                        </Col>
+                    </Row>
+                    <Row key={comm.id + 1} className="mt-2 mx-auto">
+                        <Col key={comm.id} className="px-0" xs={2} md={1}>
+                            <div className="h-100 w-100">
+                                {y == comments.length - 1 ? null : <div className="reply-line mx-auto h-100"></div>}
+                            </div>
+                        </Col>
+                        <Col key={comm.id + 1} className="px-0" xs={10} md={11}>
+                            <Card.Text style={{whiteSpace: 'pre-wrap'}} key={post.id} className="ml-2">
+                                            {comm.body}
+                                            <br/>
+                                            <br/>
+                            </Card.Text>
+                        </Col>
+                    </Row>
+                </Card.Body>
+            </Card>
+            {y == comments.length - 1 ? <div class="post-divider"></div> : <hr className="mt-2 mb-0"/> }
+            </div>
             )
         })
         return(
@@ -162,15 +203,12 @@ class Post extends Component {
                     <Card.Body key={post.id} className="p-0">
                         <Row key={post.id} className="mx-auto">
                             <Col key={post.id} className="px-0" xs={2} md={1}>
-                                <svg width={isMobile ? "2em" : "3em"} height={isMobile ? "2em" : "3em"} viewBox="0 0 16 16" className="bi bi-chat-quote" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fillRule="evenodd" d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
-                                    <path d="M7.468 7.667c0 .92-.776 1.666-1.734 1.666S4 8.587 4 7.667C4 6.747 4.776 6 5.734 6s1.734.746 1.734 1.667z"/>
-                                    <path fillRule="evenodd" d="M6.157 6.936a.438.438 0 0 1-.56.293.413.413 0 0 1-.274-.527c.08-.23.23-.44.477-.546a.891.891 0 0 1 .698.014c.387.16.72.545.923.997.428.948.393 2.377-.942 3.706a.446.446 0 0 1-.612.01.405.405 0 0 1-.011-.59c1.093-1.087 1.058-2.158.77-2.794-.152-.336-.354-.514-.47-.563zm-.035-.012h-.001.001z"/>
-                                    <path d="M11.803 7.667c0 .92-.776 1.666-1.734 1.666-.957 0-1.734-.746-1.734-1.666 0-.92.777-1.667 1.734-1.667.958 0 1.734.746 1.734 1.667z"/>
-                                    <path fillRule="evenodd" d="M10.492 6.936a.438.438 0 0 1-.56.293.413.413 0 0 1-.274-.527c.08-.23.23-.44.477-.546a.891.891 0 0 1 .698.014c.387.16.72.545.924.997.428.948.392 2.377-.942 3.706a.446.446 0 0 1-.613.01.405.405 0 0 1-.011-.59c1.093-1.087 1.058-2.158.77-2.794-.152-.336-.354-.514-.469-.563zm-.034-.012h-.002.002z"/>
-                                </svg>
+                                {/* <img src={`/media/${post.image}`}/> */}
+                                <div className="avatar-div h-100 w-100">
+                                    <div className="avatar-icon" style={{backgroundImage: `url(/media/${post.image})`}}></div>
+                                </div>
                             </Col>
-                            <Col key={post.id + 1} className="px-0 d-flex" xs={10} md={11}>
+                            <Col key={post.id + 1} className="pl-2 px-0 d-flex" xs={10} md={11}>
                                 <Card.Title 
                                     key={post.id} 
                                     className="my-auto ml-2 pointer"
@@ -198,9 +236,12 @@ class Post extends Component {
                             </Col>
                         </Row>
                         <Row key={post.id + 1} className="mt-2 mx-auto">
-                            <Col key={post.id} className="px-0" xs={2} md={1}>
-                                </Col>
-                            <Col key={post.id + 1} className="px-0" xs={10} md={11}>
+                            <Col key={post.id} className="pl-2 px-0" xs={2} md={1}>
+                                <div className="h-100 w-100">
+                                    {showComments ? <div className="reply-line mx-auto h-100"></div> : null}
+                                </div>
+                            </Col>
+                            <Col key={post.id + 1} className="pl-2 px-0" xs={10} md={11}>
                                 
                                 {/* If editing unmount post body and dissable comments */}
                                 {edit ? 
@@ -224,12 +265,13 @@ class Post extends Component {
 
                                 {commenting ? <Comment comment={this.state.comment} comment_id={this.props.post.id} handleChange={this.handleChange} handleSubmitComment={this.handleSubmitComment} ></Comment> : null}
                                 
-                                {showComments ? comments_section : null}
+                                
                             </Col>
                         </Row>
                     </Card.Body>
                 </Card>
                 <hr className="mt-2 mb-0"/>
+                {showComments ? comments_section : null}
             </div>
         )
     }
