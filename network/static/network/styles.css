@@ -1,5 +1,16 @@
 body {
     padding-top: 38px;
+    height: 100vh;
+}
+
+.pad-line {
+    padding-top: 1.4em !important;
+    margin-top: 0.5em !important;
+}
+
+.pad-f-line {
+    padding-top: 0.3em !important;
+    margin-top: 0.5em !important;
 }
 
 .profile-pic {
@@ -40,6 +51,15 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+.line-div {
+    position: relative;
+}
+
+.line-icon {
+    position: absolute;
+    left: 30px;
 }
 
 .avatar-div {
@@ -151,9 +171,9 @@ body {
     transition: all 300ms ease-out;
 }
 
-.whole-height {
+/* .whole-height {
     height: 100%;
-}
+} */
 
 .input-font {
     font-size: larger;

@@ -167,10 +167,17 @@ class FollowerSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     comment_author = serializers.SerializerMethodField('get_author')
+    image = serializers.SerializerMethodField()
 
     def get_author(self, tweet_post):
         return User.objects.get(id=tweet_post.author.id).username
 
+    def get_image(self, tweet_post):
+        img = User.objects.get(id=tweet_post.author.id).image
+        imgs = json.dumps(str(img))
+        imgs = imgs[1:-1]
+        return imgs
+
     class Meta:
         model = Comment 
-        fields = ['id', 'author', 'comment_author', 'post', 'body', 'timestamp']
+        fields = ['id', 'author', 'comment_author', 'post', 'body', 'timestamp', 'image']

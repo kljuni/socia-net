@@ -422,64 +422,60 @@ class App extends Component {
             form = <Login fetchAllPost={this.fetchAllPost} parseJwt={this.parseJwt} handle_login={this.handle_login} />;
             break;
         case 'register':
-            form = <Signup />;
+            form = <Signup display_form={this.display_form}/>;
             break;
         default:
             form = null;}
         return (
-            <div className="site">
-                    <main>
-                                    <div>
-                                        <Container><Navigation 
-                                            logged_in={this.state.logged_in}
-                                            display_form={this.display_form}
-                                            handle_logout={this.handle_logout}
-                                            username={this.state.username} 
-                                            user_id={this.state.user_id} 
-                                            loaded={this.state.user_loaded}
-                                            fetchAllPost={this.fetchAllPost}
-                                            showProfile={this.showProfile}
-                                            expanded={this.state.expanded}
-                                            handleDisplayMenu={this.handleDisplayMenu}
-                                            handleLogout={this.handleLogout} />
-                                        </Container>
+                <div className="h-100">
+                    <Container><Navigation 
+                        logged_in={this.state.logged_in}
+                        display_form={this.display_form}
+                        handle_logout={this.handle_logout}
+                        username={this.state.username} 
+                        user_id={this.state.user_id} 
+                        loaded={this.state.user_loaded}
+                        fetchAllPost={this.fetchAllPost}
+                        showProfile={this.showProfile}
+                        expanded={this.state.expanded}
+                        handleDisplayMenu={this.handleDisplayMenu}
+                        handleLogout={this.handleLogout} />
+                    </Container>
 
-                                        
+                    
 
-                                        {form}
-                                        <div className="container p-0 bg-white whole-height">                
-                                            <div className="border-left border-right">                        
-                                                {this.state.content === 'Profile' && this.state.user_loaded === true ? <Profile user_loaded={this.state.user_loaded} data={this.state.data} user_id={this.state.user_id} user_view={this.state.user_view} /> : null}
-                                                {/* If user logged in display post form */}
-                                                {(this.state.logged_in && ['All Posts','Following',''].includes(this.state.content)) ? <WritePost handleSubmit={this.handleSubmit} handleChange={this.handleChange} post={this.state.post}/> : <hr className="mt-2 mb-0"/>}
-                                                <ReactCSSTransitionGroup
-                                                    transitionName="fade"
-                                                    transitionEnterTimeout={500}
-                                                    transitionLeaveTimeout={300}>
-                                                    {this.state.msg ? <NewAlert className="position-absolute" closeAlert={this.closeAlert} msg={this.state.msg}></NewAlert> : null}
-                                                </ReactCSSTransitionGroup>  
-                                            </div>
-                                            <div className="border-left border-right h-100">
-                                                {['All Posts','Following','Profile'].includes(this.state.content) ? <PostsList 
-                                                cur_page={this.state.cur_page} 
-                                                num_pages={this.state.num_pages} 
-                                                fetchAllPost={this.fetchAllPost} 
-                                                data={this.state.data} 
-                                                showProfile={this.showProfile}
-                                                loaded={this.state.loaded}
-                                                content={this.state.content}
-                                                user_id={this.state.user_id}/> : 
-                                                <div className="row h-100">
-                                                    <div className="text-center mt-auto mx-auto">
-                                                        SVG's thanks to <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>         
-                                                    </div>
-                                                </div>
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                    </main> 
-            </div>
+                    {form}
+                    <div className="container p-0 bg-white h-100 whole-height">                
+                        <div className="border-left border-right">                        
+                            {this.state.content === 'Profile' && this.state.user_loaded === true ? <Profile showProfile={this.showProfile} user_loaded={this.state.user_loaded} data={this.state.data} user_id={this.state.user_id} user_view={this.state.user_view} /> : null}
+                            {/* If user logged in display post form */}
+                            {(this.state.logged_in && ['All Posts','Following',''].includes(this.state.content)) ? <WritePost handleSubmit={this.handleSubmit} handleChange={this.handleChange} post={this.state.post}/> : <hr className="mt-2 mb-0"/>}
+                            <ReactCSSTransitionGroup
+                                transitionName="fade"
+                                transitionEnterTimeout={500}
+                                transitionLeaveTimeout={300}>
+                                {this.state.msg ? <NewAlert className="position-absolute" closeAlert={this.closeAlert} msg={this.state.msg}></NewAlert> : null}
+                            </ReactCSSTransitionGroup>  
+                        </div>
+                        <div className="d-flex flex-column h-100">
+                            {['All Posts','Following','Profile'].includes(this.state.content) ? <PostsList 
+                            cur_page={this.state.cur_page} 
+                            num_pages={this.state.num_pages} 
+                            fetchAllPost={this.fetchAllPost} 
+                            data={this.state.data} 
+                            showProfile={this.showProfile}
+                            loaded={this.state.loaded}
+                            content={this.state.content}
+                            user_id={this.state.user_id}/> : 
+                            <div className="row h-100">
+                                <div className="text-center mt-auto mx-auto">
+                                    SVG's thanks to <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>         
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
         )
     }
 }

@@ -17,6 +17,7 @@ class Post extends Component {
             edit: false,
             tweet: this.props.post.body,
             like: this.props.post.isLiked,
+            like_count: this.props.post.like_count,
             commenting: false,
             comment: '',
             showComments: false
@@ -84,8 +85,14 @@ class Post extends Component {
                 post: id
             });
             const data = response.data;
-            if (data.action === 'like') this.setState({like:true});
-            else if (data.action === 'deleted') this.setState({like:false});
+            if (data.action === 'like') this.setState({
+                like:true,
+                like_count: this.state.like_count += 1
+            });
+            else if (data.action === 'deleted') this.setState({
+                like:false,
+                like_count: this.state.like_count -= 1
+            });
         } 
         catch (e) { 
             console.log(e); 
@@ -112,34 +119,6 @@ class Post extends Component {
         } 
     }
 
-    // likePost = (id) => {
-    //     // If user is not signed in, invite to log in
-    //     if (!this.props.user_id) {
-    //         console.log("please sign in")
-    //         return null;
-    //     }        
-    //     const requestOptions = {
-    //         method: 'POST',
-    //         headers: { Authorization: `JWT ${localStorage.getItem('token')}` },
-    //         body: JSON.stringify({ 
-    //             liker: this.props.user_id,
-    //             post: id
-    //         })
-    //     }; 
-    //     fetch(`api/like/${id}`, requestOptions)
-    //         .then(response => {
-    //             console.log(response.ok + " response")
-    //             if (!response.ok) throw Error(response.statusText + " - " + response.url);
-    //             return response.json()
-    //         })
-    //         .then(data => {
-    //             console.log(data + " data")
-    //             if (data.action === 'like') this.setState({like:true})
-    //             else if (data.action === 'deleted') this.setState({like:false})
-    //         })
-    //         .catch(err => console.log(err));
-    // }
-
     handleChange = (e, post_type) => {
         if (post_type === 'post') this.setState({tweet: e.target.value});
         else if (post_type === 'comment') this.setState({comment: e.target.value});
@@ -154,20 +133,16 @@ class Post extends Component {
                 //     {comm.comment_author}
                 //     {comm.body}
                 // </div>
-            <div  className="p-0 m-0">
-            <Card key={comm.id} className={y === 0 ? "mx-auto mt-2 mb-1 border-0 px-2" : "mx-auto my-1 border-0 px-2"}>
+            <div  className="p-0 mt-1">
+            <Card key={comm.id} className={y === 0 ? "mx-1 mt-2 border-0 pb-1 px-2" : "mx-1 mt-2 border-0 pb-1 px-2"}>
                 <Card.Body key={comm.id} className="p-0">
                     <Row key={comm.id} className="mx-auto">
                         <Col key={comm.id} className="px-0" xs={2} md={1}>
-                            {/* <svg width={isMobile ? "2em" : "3em"} height={isMobile ? "2em" : "3em"} viewBox="0 0 16 16" className="bi bi-chat-quote" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fillRule="evenodd" d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
-                                <path d="M7.468 7.667c0 .92-.776 1.666-1.734 1.666S4 8.587 4 7.667C4 6.747 4.776 6 5.734 6s1.734.746 1.734 1.667z"/>
-                                <path fillRule="evenodd" d="M6.157 6.936a.438.438 0 0 1-.56.293.413.413 0 0 1-.274-.527c.08-.23.23-.44.477-.546a.891.891 0 0 1 .698.014c.387.16.72.545.923.997.428.948.393 2.377-.942 3.706a.446.446 0 0 1-.612.01.405.405 0 0 1-.011-.59c1.093-1.087 1.058-2.158.77-2.794-.152-.336-.354-.514-.47-.563zm-.035-.012h-.001.001z"/>
-                                <path d="M11.803 7.667c0 .92-.776 1.666-1.734 1.666-.957 0-1.734-.746-1.734-1.666 0-.92.777-1.667 1.734-1.667.958 0 1.734.746 1.734 1.667z"/>
-                                <path fillRule="evenodd" d="M10.492 6.936a.438.438 0 0 1-.56.293.413.413 0 0 1-.274-.527c.08-.23.23-.44.477-.546a.891.891 0 0 1 .698.014c.387.16.72.545.924.997.428.948.392 2.377-.942 3.706a.446.446 0 0 1-.613.01.405.405 0 0 1-.011-.59c1.093-1.087 1.058-2.158.77-2.794-.152-.336-.354-.514-.469-.563zm-.034-.012h-.002.002z"/>
-                            </svg> */}
+                            <div className="avatar-div h-100 w-100">
+                                <div className="avatar-icon mx-auto" style={{backgroundImage: `url(/media/${comm.image})`}}></div>
+                            </div>
                         </Col>
-                        <Col key={comm.id + 1} className="px-0 d-flex" xs={10} md={11}>
+                        <Col key={comm.id + 1} className="pl-2 px-0 d-flex" xs={10} md={11}>
                             <Card.Title 
                                 key={comm.id} 
                                 className="my-auto ml-2 pointer"
@@ -179,15 +154,19 @@ class Post extends Component {
                     </Row>
                     <Row key={comm.id + 1} className="mt-2 mx-auto">
                         <Col key={comm.id} className="px-0" xs={2} md={1}>
-                            <div className="h-100 w-100">
-                                {y == comments.length - 1 ? null : <div className="reply-line mx-auto h-100"></div>}
+                            <div className="pad-line h-100 w-100">
+                                {y == comments.length - 1 ? null : 
+                                <div className="line-div h-100">
+                                    <div className="line-icon reply-line mx-auto h-100"></div>
+                                </div>
+                                }
                             </div>
                         </Col>
-                        <Col key={comm.id + 1} className="px-0" xs={10} md={11}>
+                        <Col key={comm.id + 1} className="px-0 pl-2" xs={10} md={11}>
                             <Card.Text style={{whiteSpace: 'pre-wrap'}} key={post.id} className="ml-2">
+                                            <p><i>Commented: </i></p>
                                             {comm.body}
-                                            <br/>
-                                            <br/>
+                                            <br/>                                           
                             </Card.Text>
                         </Col>
                     </Row>
@@ -198,8 +177,8 @@ class Post extends Component {
             )
         })
         return(
-            <div className="p-0 m-0">
-                <Card key={post.id} className={y === 0 ? "mx-auto mt-2 mb-1 border-0 px-2" : "mx-auto my-1 border-0 px-2"}>
+            <div className="p-0 mt-1">
+                <Card key={post.id} className={y === 0 ? "mx-1 mt-1 border-0 pt-2 px-2" : "mx-1 mt-2 border-0 pb-1 px-2"}>
                     <Card.Body key={post.id} className="p-0">
                         <Row key={post.id} className="mx-auto">
                             <Col key={post.id} className="px-0" xs={2} md={1}>
@@ -211,7 +190,7 @@ class Post extends Component {
                             <Col key={post.id + 1} className="pl-2 px-0 d-flex" xs={10} md={11}>
                                 <Card.Title 
                                     key={post.id} 
-                                    className="my-auto ml-2 pointer"
+                                    className="my-0 ml-2 pointer"
                                     onClick={() => showProfile(post.author)}>
                                         {post.post_author}
                                     <span className="text-secondary small"> · {moment(post.timestamp).fromNow()}</span>
@@ -225,20 +204,26 @@ class Post extends Component {
                                     </svg> : null}
                                 </div>
                                 {!like ? 
-                                <svg onClick={() => this.likePost(post.id)} key={post.id + 1} width="2.6em" height="2.6em" viewBox="0 0 16 16" className="like-heart bi bi-heart my-auto p-2 pointer" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fillRule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                                </svg> 
+                                <div>
+                                    <svg onClick={() => this.likePost(post.id)} key={post.id + 1} width="2.6em" height="2.6em" viewBox="0 0 16 16" className="like-heart bi bi-heart my-auto p-2 pointer" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fillRule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                                    </svg>{this.state.like_count}
+                                </div> 
                                 :
-                                <svg onClick={() => this.likePost(post.id)} width="2.6em" height="2.6em" viewBox="0 0 16 16" className="like-heart bi bi-heart my-auto p-2 pointer" fill="rgb(224, 36, 94)" xmlns="http://www.w3.org/2000/svg">
-                                    <path fillRule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-                                </svg>
+                                <div>
+                                    <svg onClick={() => this.likePost(post.id)} width="2.6em" height="2.6em" viewBox="0 0 16 16" className="like-heart bi bi-heart my-auto p-2 pointer" fill="rgb(224, 36, 94)" xmlns="http://www.w3.org/2000/svg">
+                                        <path fillRule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                    </svg>{this.state.like_count}
+                                </div>
                                 }
                             </Col>
                         </Row>
                         <Row key={post.id + 1} className="mt-2 mx-auto">
-                            <Col key={post.id} className="pl-2 px-0" xs={2} md={1}>
-                                <div className="h-100 w-100">
-                                    {showComments ? <div className="reply-line mx-auto h-100"></div> : null}
+                            <Col key={post.id} className="px-0" xs={2} md={1}>
+                                <div className="pad-f-line h-100 w-100">
+                                    {showComments ? <div className="line-div h-100">
+                                        <div className="line-icon reply-line mx-auto h-100"></div>
+                                    </div> : null}
                                 </div>
                             </Col>
                             <Col key={post.id + 1} className="pl-2 px-0" xs={10} md={11}>
@@ -259,7 +244,7 @@ class Post extends Component {
                                                         {tweet}
                                         </Card.Text>
                                         <Card.Link key={post.id + 1} className="ml-2 text-primary pointer" onClick={() => this.enableComment()}>Comment</Card.Link>
-                                        <Card.Link key={post.id + 2} className="ml-2 text-primary pointer" onClick={() => this.enableShowComment()}>View comments</Card.Link>
+                                        {post.comments.length > 0 ? <Card.Link key={post.id + 2} className="ml-2 text-primary pointer" onClick={() => this.enableShowComment()}>View comments</Card.Link> : null}
                                     </div>                                    
                                 }
 
