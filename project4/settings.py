@@ -187,11 +187,11 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # STATIC_ROOT = '/network/media/'
 
-STATIC_URL = '/static/'
+STATIC_URL = '/media/'
 
-MEDIA_URL = '/static/media/'
+MEDIA_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'network/static/media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'network/static')
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
