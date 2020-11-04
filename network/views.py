@@ -47,7 +47,7 @@ class CustomUserCreate(APIView):
     def post(self, request, format='json'): 
         serializer = CustomUserSerializer(data=request.data) 
         if serializer.is_valid(): 
-            user = serializer.save() 
+            user = serializer.save()
             if user: 
                 json = serializer.data 
                 return Response(json, status=status.HTTP_201_CREATED) 
