@@ -4,8 +4,6 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
-import ContentLoader, { Facebook } from "react-content-loader";
-import { BrowserView, MobileView, isBrowser, isMobile } from "react-device-detect";
 import moment from 'moment';
 import axiosInstance from "./axiosApi";
 import Comment from "./Comment";
@@ -51,26 +49,6 @@ class Post extends Component {
         catch (e) { 
             console.log(e); 
         }
-        
-        // const requestOptions = {
-        //     method: 'POST',
-        //     headers: { Authorization: `JWT ${localStorage.getItem('token')}` },
-        //     body: JSON.stringify({ 
-        //         author: 8,
-        //         body: this.state.tweet
-        //     })
-        // }; 
-        // fetch(`api/edit/${this.props.post.id}`, requestOptions)
-        //     .then(response => {
-        //         console.log(response)
-        //         if (!response.ok) throw Error(response.statusText + " - " + response.url);
-        //         response.json()
-        //     })
-        //     .then(data => {
-        //         this.setState({edit:false})
-        //         console.log(data)
-        //     })
-        //     .catch(err => console.log(err));
     }
 
     likePost = async (id) => {
@@ -129,10 +107,6 @@ class Post extends Component {
         const { edit, tweet, like, commenting, showComments } = this.state;
         const comments_section = comments.map((comm, y) => {
             return (
-                // <div key={comm.id}>
-                //     {comm.comment_author}
-                //     {comm.body}
-                // </div>
             <div  className="p-0 mt-1">
             <Card key={comm.id} className={y === 0 ? "mx-1 mt-2 border-0 pb-1 px-2" : "mx-1 mt-2 border-0 pb-1 px-2"}>
                 <Card.Body key={comm.id} className="p-0">
@@ -167,6 +141,7 @@ class Post extends Component {
                                             <p><i>Commented: </i></p>
                                             {comm.body}
                                             <br/>                                           
+                                            <br/>                                           
                             </Card.Text>
                         </Col>
                     </Row>
@@ -183,7 +158,7 @@ class Post extends Component {
                         <Row key={post.id} className="mx-auto">
                             <Col key={post.id} className="px-0" xs={2} md={1}>
                                 {/* <img src={`/media/${post.image}`}/> */}
-                                <div className="avatar-div h-100 w-100">
+                                <div className="avatar-div h-100 w-100 pointer" onClick={() => showProfile(post.author)}>
                                     <div className="avatar-icon" style={{backgroundImage: `url(/media/${post.image})`}}></div>
                                 </div>
                             </Col>

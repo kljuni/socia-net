@@ -1,18 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import ContentLoader, { Facebook } from "react-content-loader";
 
 function Navigation({ handleDisplayMenu, expanded, username, user_id, fetchAllPost, display_form, handle_logout, logged_in, showProfile, handleLogout }) {
-    
-    // if (!loaded) {
-    //     return (
-    //         <ContentLoader viewBox="0 0 380 20">
-    //             {/* Only SVG shapes */}    
-    //             <rect x="0" y="0" rx="5" ry="5" width="100%" height="20" />
-    //         </ContentLoader>
-    //     )
-    // }
 
     return(
         <Navbar collapseOnSelect className="border-bottom" fixed="top" expanded={expanded} bg="light" expand="lg">

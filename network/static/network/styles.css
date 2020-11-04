@@ -19,12 +19,7 @@ body {
 }
 
 .avatar-parent {
-    position: relative; 
-    /* border: 1px solid red; 
-    width: 50px; 
-    height: 30px; 
-    line-height: 30px; 
-    text-align: center; */
+    position: relative;
 }
 
 .avatar-input {

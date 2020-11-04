@@ -1,35 +1,25 @@
 import React, { Component } from "react";
-import { render } from "react-dom";
-import Button from "react-bootstrap/Button";
-import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Navigation from "./Navigation";
 import WritePost from "./WritePost";
 import PostsList from "./PostsList";
 import NewAlert from "./NewAlert";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-// import LoginForm from './LoginForm';
-// import RegisterForm from './RegisterForm';
 import Profile from './Profile';
-import { Switch, Route, Link } from "react-router-dom";
 import Login from "./login"; 
 import Signup from "./signup";
-import Hello from "./hello";
 import axiosInstance from "./axiosApi"
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-import { async } from "regenerator-runtime";
 
 class App extends Component {
     constructor(props){
         super(props);
         this.state = {
             data: [],
-            user: {},
-            post: '',
             loaded: false,
             user_loaded: false,
-            placeholder: "Loading",
+            post: '',
             content: '',
             msg: '',
             logged_in: localStorage.getItem('access_token') ? true : false,
@@ -37,7 +27,6 @@ class App extends Component {
             username: '',
             user_id: '',
             user_view: {},
-            user_loaded: false,
             num_pages: 0,
             cur_page: 1,
             expanded: false,
@@ -79,29 +68,6 @@ class App extends Component {
     closeAlert = (e) => {        
         if (e == true) this.setState({msg: ''});
     }
-    
-    // handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     console.log(this.state.user_id)
-    //     this.setState({post: ''})
-    //     console.log("submited");
-    //     const requestOptions = {
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify({ 
-    //             author: this.state.user_id,
-    //             body: this.state.post
-    //         })
-    //     }; 
-    //     fetch('api/posts/0', requestOptions)
-    //         .then(this.handleErrors)
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             this.setState({msg: 'Your socia! was sent.'});
-    //             this.fetchAllPost(1);
-    //         })
-
-    // }
 
     handleSubmit = async (e) => {
         e.preventDefault();
@@ -115,28 +81,6 @@ class App extends Component {
             this.setState({msg: 'Your socia! was sent.'});
             this.fetchAllPost(1);
             console.log(data);
-
-
-            // this.setState({
-            //     displayed_form: '',
-            //     content: 'All Posts',
-            //     user_view: {},
-            //     user_loaded: false,
-            //     expanded: false,
-            //     cur_page: page,
-            //     loaded: false
-            // });
-            // window.scrollTo(0, 0)
-            // const response = await axiosInstance.get(`posts/${page}`);
-            // console.log(response.data);
-            // const data = response.data
-            // this.setState(() => {
-            //     return {
-            //         data:data.data,
-            //         num_pages: data.num_pages,
-            //         loaded: true
-            //     };
-            // });
         } 
         catch (e) { 
             console.log(e); 
@@ -158,20 +102,6 @@ class App extends Component {
         return response;
     }
 
-    // componentDidMount() {
-    //     if (this.state.logged_in) {
-    //       fetch('http://localhost:8000/current_user/', {
-    //         headers: {
-    //           Authorization: `JWT ${localStorage.getItem('token')}`
-    //         }
-    //       })
-    //         .then(res => res.json())
-    //         .then(json => {
-    //           this.setState({ username: json.username });
-    //         });
-    //     }
-    // }
-
     parseJwt (token) {
         var base64Url = token.split('.')[1];
         var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -190,26 +120,6 @@ class App extends Component {
                 user_id: token_data.id}
             );
             this.fetchAllPost(1, 'all')
-            // fetch('http://localhost:8000/current_user/', {
-            //   headers: {
-            //     Authorization: `JWT ${localStorage.getItem('refresh_token')}`
-            //   }
-            // })
-            // .then(this.handleErrors)
-            // .then(res => res.json())
-            // .then(json => {
-            //     const token_data = this.parseJwt(localStorage.getItem('refresh_token'))
-            //     this.setState({ 
-            //         username: json.username,
-            //         user_id: json.id});
-            // })
-            // .catch(err => {
-            //     this.setState({ 
-            //         username: '',
-            //         user_id: '',
-            //         logged_in: false
-            //     });                  
-            // });
         }
         else {
             this.setState({
@@ -246,67 +156,6 @@ class App extends Component {
             console.log(e); 
         } 
     };
-        
-    //     window.scrollTo(0, 0)
-    //     this.setState({
-    //         displayed_form: '',
-    //         content: 'All Posts',
-    //         user_view: {},
-    //         user_loaded: false,
-    //         expanded: false,
-    //         cur_page: page
-    //     });
-    //     fetch(`api/posts/${page}`)
-    //     .then(response => {
-    //         if (response.status > 400) {
-    //             return this.setState(() => {
-    //                 return { placeholder: "Something went wrong!" };
-    //             });
-    //         }
-    //         return response.json();
-    //     })
-    //     .then(data => {
-    //         console.log(data)
-    //         this.setState(() => {
-    //             return {
-    //                 data:data.data,
-    //                 num_pages: data.num_pages,
-    //                 loaded: true
-    //             };
-    //         });
-    //     });
-    // }
-
-    // fetchAllPost = async (page) => {
-    //     window.scrollTo(0, 0)
-    //     this.setState({
-    //         displayed_form: '',
-    //         content: 'All Posts',
-    //         user_view: {},
-    //         user_loaded: false,
-    //         expanded: false,
-    //         cur_page: page
-    //     });
-    //     fetch(`api/posts/${page}`)
-    //     .then(response => {
-    //         if (response.status > 400) {
-    //             return this.setState(() => {
-    //                 return { placeholder: "Something went wrong!" };
-    //             });
-    //         }
-    //         return response.json();
-    //     })
-    //     .then(data => {
-    //         console.log(data)
-    //         this.setState(() => {
-    //             return {
-    //                 data:data.data,
-    //                 num_pages: data.num_pages,
-    //                 loaded: true
-    //             };
-    //         });
-    //     });
-    // }
     
     fetchAllPost = async (page, follow) => {
         try { 
@@ -336,13 +185,12 @@ class App extends Component {
         } 
     };
 
-
     showProfile = async (id) => {
         window.scrollTo(0, 0)
         try { 
             this.setState({
                 displayed_form: '',
-                content: 'Profile',
+                content: '',
                 expanded: false,
                 loaded: false
             });
@@ -352,6 +200,7 @@ class App extends Component {
             console.log("here data")
             this.setState({
                 data: data.posts,
+                content: 'Profile',
                 user_view: data,
                 user_loaded: true,
                 loaded: true
@@ -370,40 +219,6 @@ class App extends Component {
             user_id: json.id
         });
     };
-
-    // handle_signup = (e, data) => {
-    //     e.preventDefault();
-    //     fetch('http://localhost:8000/user/create/', {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //       },
-    //       body: JSON.stringify(data)
-    //     })
-    //       .then(res => res.json())
-    //       .then(json => {
-    //         localStorage.setItem('token', json.token);
-    //         this.setState({
-    //           logged_in: true,
-    //           displayed_form: '',
-    //           username: json.username,
-    //           user_id: json.id
-    //         });
-    //       });
-    // };
-
-    // handle_logout = () => {
-    //     localStorage.removeItem('token');
-    //     window.scrollTo(0, 0)
-    //     this.setState({
-    //         displayed_form: 'login',
-    //         logged_in: false, 
-    //         username: '',
-    //         content: '',
-    //         user_id: '',
-    //         expanded: false
-    //     });
-    //   };
     
     display_form = form => {
         window.scrollTo(0, 0)
@@ -440,9 +255,7 @@ class App extends Component {
                         expanded={this.state.expanded}
                         handleDisplayMenu={this.handleDisplayMenu}
                         handleLogout={this.handleLogout} />
-                    </Container>
-
-                    
+                    </Container>            
 
                     {form}
                     <div className="container p-0 bg-white h-100 whole-height">                
@@ -458,7 +271,8 @@ class App extends Component {
                             </ReactCSSTransitionGroup>  
                         </div>
                         <div className="d-flex flex-column h-100">
-                            {['All Posts','Following','Profile'].includes(this.state.content) ? <PostsList 
+                            {['All Posts','Following','Profile'].includes(this.state.content) ? 
+                            <PostsList 
                             cur_page={this.state.cur_page} 
                             num_pages={this.state.num_pages} 
                             fetchAllPost={this.fetchAllPost} 
@@ -466,7 +280,8 @@ class App extends Component {
                             showProfile={this.showProfile}
                             loaded={this.state.loaded}
                             content={this.state.content}
-                            user_id={this.state.user_id}/> : 
+                            user_id={this.state.user_id}/> 
+                            : 
                             <div className="row h-100">
                                 <div className="text-center mt-auto mx-auto">
                                     SVG's thanks to <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>         
@@ -481,9 +296,3 @@ class App extends Component {
 }
 
 export default App;
-
-// const container = document.getElementById("root");
-// render(( 
-//         <BrowserRouter>
-//             <App />
-//         </BrowserRouter>), container);

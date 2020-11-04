@@ -9,35 +9,18 @@ from .views import UserImage, ObtainTokenPairWithColorView, CustomUserCreate, Lo
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path('current_user/', views.current_user),
-    path('users/', views.UserList.as_view()),
-
-    path('api/hello/', GetQuestionsAPIView.as_view()),
-
-    # API Routes
-    # path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-
+    # path('current_user/', views.current_user),
+    # path('users/', views.UserList.as_view()),
     path('api/user/create/', CustomUserCreate.as_view(), name="create_user"),
-
     path('api/image/<int:id>/', UserImage.as_view(), name="profile_image"),
-    
     path('api/token/obtain/', ObtainTokenPairWithColorView.as_view(), name='token_create'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-
     path("api/posts/<int:page>/<str:follow>/", PostList.as_view(), name="posts"),
     path("api/like/<int:id>/", LikePost.as_view(), name="like"),
-
     path("api/comment/<int:id>/", CommentPost.as_view(), name="comment"),
-
     path("api/edit/<int:id>/", EditPost.as_view(), name="edit"),
-    
     path("api/user/<int:id>/", ViewUser.as_view(), name="user"),
     path("api/follow/<str:action>/<int:id>/", FollowUser.as_view(), name="follow"),
     path('api/blacklist/', LogoutAndBlacklistRefreshTokenForUserView.as_view(), name='blacklist'),
     url(r'^.*/$', views.index)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-# urlpatterns = [ 
-#     path('', index_view), # for the empty url 
-#     url(r'^.*/$', index_view) # for all other urls 
-# ]
