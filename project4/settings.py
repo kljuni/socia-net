@@ -191,5 +191,5 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'network/media')
 
-Activate Django-Heroku.
+# Activate Django-Heroku.
 django_heroku.settings(locals())
