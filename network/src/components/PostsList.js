@@ -9,7 +9,7 @@ function PostsList({ content, cur_page, num_pages, fetchAllPost, data, showProfi
     }
     
     return(
-        <div className={`d-flex flex-column border-left border-right ${data.length < 5 ? 'h-100' : null}`}>
+        <div className={`d-flex flex-column border-left border-right ${data.length < 10 ? 'h-100' : null}`}>
                 {data.length == 0 ? <p className="lead mx-auto my-2">No socias posted yet...</p> : null}
                 {['All Posts','Following'].includes(content) ? <div className="post-divider"></div> : null}
                 {data.map((post, y) => {
