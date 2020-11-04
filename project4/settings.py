@@ -25,10 +25,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '13kl@xtukpwe&xj2xoysxe9_6=tf@f8ewxer5n&ifnd46+6$%8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['*','127.0.0.1', '.herokuapp.com']
+ALLOWED_HOSTS = ['*','127.0.0.1', 'socia-net.herokuapp.com']
 
 # Application definition
 
@@ -100,7 +100,7 @@ JWT_AUTH = {
 
 ROOT_URLCONF = 'project4.urls'
 
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
 
 TEMPLATES = [
     {
