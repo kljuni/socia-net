@@ -27,11 +27,11 @@ class Post extends Component {
     }
 
     enableComment = () => {
-        this.setState({commenting: !this.state.showComments})
+        this.setState({commenting: !this.state.commenting})
     }
 
     enableShowComment = () => {
-        this.setState({showComments:!this.state.showComments})
+        this.setState({showComments: !this.state.showComments})
     }
 
     handleSubmit = async (e) => {
