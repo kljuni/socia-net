@@ -14,6 +14,7 @@ from .serializers import PostSerializer, LikeSerializer, FollowerSerializer, Com
 from django.core.paginator import Paginator
 from rest_framework.generics import GenericAPIView
 from rest_framework_simplejwt.views import TokenObtainPairView
+import json
 
 from .serializers import MyTokenObtainPairSerializer, CustomUserSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -121,7 +122,15 @@ class ViewUser(APIView):
 
 class UserImage(APIView):
     permission_classes = [IsAuthenticated,] 
-    def put(self, request, id):
+    def put(self, request, source, id):
+        if source == 'url':
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+            image_url = body['image_url']
+            if image_url:
+                request.user.image_url = image_url
+                request.user.save()
+                return JsonResponse({'image': request.user.image_url}, status=200, safe=False)
         try:
             im = Image.open(request.FILES['image'])
             request.user.image = request.FILES['image']

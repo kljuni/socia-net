@@ -31,7 +31,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'password', 'email', 'image')
+        fields = ('id', 'username', 'password', 'email', 'image', 'image_url')
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,10 +44,11 @@ class PostSerializer(serializers.ModelSerializer):
     isLiked = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ['id', 'author', 'post_author', 'body', 'like_count', 'timestamp', 'isLiked', 'comments', 'image']
+        fields = ['id', 'author', 'post_author', 'body', 'like_count', 'timestamp', 'isLiked', 'comments', 'image', 'image_url']
 
     def get_comments(self, obj):
          comment = Comment.objects.filter(post=obj).order_by('-timestamp')
@@ -59,6 +60,9 @@ class PostSerializer(serializers.ModelSerializer):
          imgs = json.dumps(str(img))
          imgs = imgs[1:-1]
          return imgs
+
+    def get_image_url(self, tweet_post):
+         return User.objects.get(id=tweet_post.author.id).image_url
 
     def get_isLiked(self, obj):
         if self.context.get("user") == 'anonimus':
@@ -85,6 +89,7 @@ class FollowerSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     comment_author = serializers.SerializerMethodField('get_author')
     image = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
 
     def get_author(self, tweet_post):
         return User.objects.get(id=tweet_post.author.id).username
@@ -94,7 +99,10 @@ class CommentSerializer(serializers.ModelSerializer):
         imgs = json.dumps(str(img))
         imgs = imgs[1:-1]
         return imgs
+    
+    def get_image_url(self, tweet_post):
+         return User.objects.get(id=tweet_post.author.id).image_url
 
     class Meta:
         model = Comment 
-        fields = ['id', 'author', 'comment_author', 'post', 'body', 'timestamp', 'image']
+        fields = ['id', 'author', 'comment_author', 'post', 'body', 'timestamp', 'image', 'image_url']

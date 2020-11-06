@@ -11,6 +11,7 @@ from django_resized import ResizedImageField
 
 class User(AbstractUser):
     image = ResizedImageField(upload_to='profile_image', blank=True, default='default.jpg')
+    image_url = models.URLField(blank=True, default='https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg')
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')

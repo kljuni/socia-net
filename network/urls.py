@@ -12,7 +12,7 @@ urlpatterns = [
     # path('current_user/', views.current_user),
     # path('users/', views.UserList.as_view()),
     path('api/user/create/', CustomUserCreate.as_view(), name="create_user"),
-    path('api/image/<int:id>/', UserImage.as_view(), name="profile_image"),
+    path('api/image/<str:source>/<int:id>/', UserImage.as_view(), name="profile_image"),
     path('api/token/obtain/', ObtainTokenPairWithColorView.as_view(), name='token_create'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path("api/posts/<int:page>/<str:follow>/", PostList.as_view(), name="posts"),

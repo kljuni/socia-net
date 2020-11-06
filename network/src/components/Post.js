@@ -113,7 +113,7 @@ class Post extends Component {
                     <Row key={comm.id} className="mx-auto">
                         <Col key={comm.id} className="px-0" xs={2} md={1}>
                             <div className="avatar-div h-100 w-100">
-                                <div className="avatar-icon mx-auto" style={{backgroundImage: `url(/media/${comm.image})`}}></div>
+                                <div className="avatar-icon mx-auto" style={{backgroundImage: `url(${comm.image_url})`}}></div>
                             </div>
                         </Col>
                         <Col key={comm.id + 1} className="pl-2 px-0 d-flex" xs={10} md={11}>
@@ -159,7 +159,7 @@ class Post extends Component {
                             <Col key={post.id} className="px-0" xs={2} md={1}>
                                 {/* <img src={`/media/${post.image}`}/> */}
                                 <div className="avatar-div h-100 w-100 pointer" onClick={() => showProfile(post.author)}>
-                                    <div className="avatar-icon" style={{backgroundImage: `url(/media/${post.image})`}}></div>
+                                    <div className="avatar-icon" style={{backgroundImage: `url(${post.image_url})`}}></div>
                                 </div>
                             </Col>
                             <Col key={post.id + 1} className="pl-2 px-0 d-flex" xs={10} md={11}>
