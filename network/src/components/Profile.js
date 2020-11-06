@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import axiosInstance from "./axiosApi";
+import ReactTooltip from 'react-tooltip';
 
 class Profile extends Component {
     constructor(props){
@@ -132,7 +133,8 @@ class Profile extends Component {
             <div> 
                 <div className="profile-banner">                    
                     <div className="avatar-pic" style={{backgroundImage: `url(${this.state.avatar})`}}
-                        data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">
+                        data-tip="Image will be uploaded only for the lifetime of the dyno session.">
+                            <ReactTooltip />
                         {user_id === user_view.user.id ? (<div className="h-100 w-100 avatar-parent" role="button">
                             <input className="p-2 avatar-input" type='file' name='avatar' onChange={(e) => this.fileSelectAndUploadHandeler(e, user_id)}/>
                         </div>) : null}
