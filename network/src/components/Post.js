@@ -27,7 +27,7 @@ class Post extends Component {
     }
 
     enableComment = () => {
-        this.setState({commenting:true})
+        this.setState({commenting: !this.state.showComments})
     }
 
     enableShowComment = () => {
