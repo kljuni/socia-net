@@ -51,7 +51,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ['id', 'author', 'post_author', 'body', 'like_count', 'timestamp', 'isLiked', 'comments', 'image', 'image_url']
 
     def get_comments(self, obj):
-         comment = Comment.objects.filter(post=obj).order_by('-timestamp')
+         comment = Comment.objects.filter(post=obj)
          serializer = CommentSerializer(comment, many=True)
          return serializer.data
 
