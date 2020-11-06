@@ -133,8 +133,15 @@ class Profile extends Component {
             <div> 
                 <div className="profile-banner">                    
                     <div className="avatar-pic" style={{backgroundImage: `url(${this.state.avatar})`}}
-                        data-tip="Image will be uploaded only for the lifetime of the dyno session.">
-                            <ReactTooltip />
+                        data-tip="Image will be uploaded only for the lifetime of the dyno session."
+                        data-for="main"
+                        data-iscapture="true">
+                            <ReactTooltip
+                                id="main"
+                                place="bottom"
+                                type="info"
+                                effect="solid"
+                            />
                         {user_id === user_view.user.id ? (<div className="h-100 w-100 avatar-parent" role="button">
                             <input className="p-2 avatar-input" type='file' name='avatar' onChange={(e) => this.fileSelectAndUploadHandeler(e, user_id)}/>
                         </div>) : null}
