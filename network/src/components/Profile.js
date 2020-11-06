@@ -131,7 +131,8 @@ class Profile extends Component {
         return (
             <div> 
                 <div className="profile-banner">                    
-                    <div className="avatar-pic" style={{backgroundImage: `url(${this.state.avatar})`}}>
+                    <div className="avatar-pic" style={{backgroundImage: `url(${this.state.avatar})`}}
+                        data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">
                         {user_id === user_view.user.id ? (<div className="h-100 w-100 avatar-parent" role="button">
                             <input className="p-2 avatar-input" type='file' name='avatar' onChange={(e) => this.fileSelectAndUploadHandeler(e, user_id)}/>
                         </div>) : null}
